@@ -1,0 +1,48 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+  font-size: 62.5%;
+}
+body {
+  height: 100vh;
+  background: url("img/background.jpg") center / cover no-repeat;
+  padding: 10rem;
+  font-family: sans-serif;
+  color: #111;
+}
+.container {
+  width: 50rem;
+  height: 50rem;
+  border-radius: 1.5rem;
+  background-color: #ccc;
+  opacity: 0.8;
+  margin: 0 auto;
+  padding: 3rem;
+}
+.location {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5rem;
+}
+.temperature-box {
+  transition: all 0.3s;
+}
+.paragraph {
+  font-size: 3.6rem;
+}
+.span {
+  font-size: 2.8rem;
+  color: #333;
+}
+
+.temperature-box {
+  margin-bottom: 2rem;
+}
+
+.hidden {
+  visibility: hidden;
+}
