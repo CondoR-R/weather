@@ -1,11 +1,7 @@
-
-/** Version 1.2
- * Вывод города на основе координат устройства пользователя
- */
-
 class App {
   #temperatureSpan = document.querySelector("#temperature");
   #temperatureBox = document.querySelector(".temperature-box");
+  #citySpan = document.querySelector(".city");
   #currentDate = new Date();
   constructor() {
     this.#getCoords();
@@ -14,7 +10,10 @@ class App {
   #getCoords() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        this.#getWeather.bind(this),
+        (location) => {
+          this.#getWeather(location);
+          this.#getAdress(location);
+        },
         () => alert("Вы не предоставили доступ к своей геопозиции ")
       );
     }
@@ -34,8 +33,6 @@ class App {
     // получаем индекс текущего времени и по нему определяем температуру
     const index = weather.time.indexOf(formattedCurrentDate);
     const temperature = weather.temperature_2m[index];
-    console.log(formattedCurrentDate);
-    console.log(weather);
     this.#showWeather(temperature);
   }
 
@@ -60,6 +57,37 @@ class App {
   #showWeather(temp) {
     this.#temperatureSpan.textContent = temp;
     this.#temperatureBox.classList.remove("hidden");
+  }
+
+  // получение от API город юзера
+  #getAdress(position) {
+    const { latitude, longitude } = position.coords;
+    const url =
+      "http://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address";
+    const token = "99c0507a40d0b615884486440a6470e0359a1929";
+    const query = { lat: latitude, lon: longitude };
+
+    const options = {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Token " + token,
+      },
+      body: JSON.stringify(query),
+    };
+
+    fetch(url, options)
+      .then((response) => response.json())
+      .then((result) => this.#showAdress(result.suggestions[0].value))
+      .catch((error) => console.log("error", error));
+  }
+
+  #showAdress(address) {
+    const lastIndex = address.indexOf(",");
+    const city = address.slice(0, lastIndex);
+    this.#citySpan.textContent = city;
   }
 }
 
