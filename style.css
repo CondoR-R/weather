@@ -7,49 +7,69 @@ html {
   font-size: 62.5%;
 }
 body {
-  height: 100vh;
-  background: url("img/background.jpg") center / cover no-repeat;
-  padding: 10rem;
   font-family: sans-serif;
   color: #111;
 }
 .container {
-  width: 50rem;
-  height: 50rem;
+  height: 100rem;
+  background: url("img/background.jpg") center / cover no-repeat;
+  padding: 10rem;
+}
+.content-box {
+  width: 60rem;
   border-radius: 1.5rem;
   background-color: #ccc;
-  opacity: 0.8;
+  opacity: 0.7;
   margin: 0 auto;
   padding: 3rem;
+  margin-bottom: 2.5rem;
 }
 .location {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-bottom: 5rem;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
-.temperature-box {
-  transition: all 0.3s;
+.location__icon {
+  opacity: 0.8;
+  width: 3.6rem;
+  height: 3.6rem;
+  margin-right: 1rem;
 }
-.paragraph {
+#city {
   font-size: 3.6rem;
 }
-.span {
+.horizontal-line {
+  width: 100%;
+  border-bottom: 0.1rem solid #333;
+  margin-bottom: 1rem;
+}
+.current-weather {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 1rem;
+  grid-template-rows: 2.8rem 7.2rem;
+  row-gap: 1rem;
+}
+.current-weather__paragraph {
   font-size: 2.8rem;
   color: #333;
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
 }
-.temperature-box {
-  margin-bottom: 2rem;
-  text-align: center;
+.current-temperature-box {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  font-size: 6rem;
 }
-.temperature-paragraph {
-  font-size: 7.2rem;
-}
-.apparent-temperature-paragraph {
+.apparent-temperature-box {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
   font-size: 2.8rem;
-  color: #333;
 }
-
+.apparent-temperature__text {
+  display: block;
+}
 .hidden {
   visibility: hidden;
 }

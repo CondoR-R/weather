@@ -8,11 +8,8 @@
     <script defer src="script.js"></script>
   </head>
   <body>
-    <div class="container">
-      <div class="location">
-        <p class="paragraph">Местоположение:</p>
-        <span class="span city"></span>
-      </div>
+    <!-- <div class="container">
+      
       <div class="weather">
         <div class="temperature-box hidden">
           <p class="paragraph temperature-paragraph">
@@ -22,9 +19,27 @@
             Ощущается как <span id="apparent-temperature"></span>ºC
           </p>
         </div>
-        <!-- <div class="precipitation-box">
-            <p class="paragraph">Осдаки: <span id="precipitation">без осадков</span></p>
-        </div> -->
+      </div>
+    </div> -->
+    <div class="container">
+      <div class="content-box">
+        <section class="location">
+          <img src="icons/geolocation.svg" alt="" class="icon location__icon" />
+          <span class="span" id="city"></span>
+        </section>
+        <div class="horizontal-line"></div>
+        <section class="current-weather">
+          <p class="paragraph current-weather__paragraph">Сейчас:</p>
+          <div class="current-temperature-box">
+            <span id="current-temperature" class="span"></span>
+            <span class="span">ºC</span>
+          </div>
+          <div class="apparent-temperature-box">
+            <span class="span apparent-temperature__text">Ощущается как</span>
+            <span id="apparent-temperature" class="span"></span>
+            <span class="span">ºC</span>
+          </div>
+        </section>
       </div>
     </div>
   </body>

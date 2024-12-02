@@ -1,8 +1,9 @@
 class App {
-  #temperatureSpan = document.querySelector("#temperature");
+  #temperatureSpan = document.querySelector("#current-temperature");
   #apparentTemperatureSpan = document.querySelector("#apparent-temperature");
+  #citySpan = document.querySelector("#city");
   #temperatureBox = document.querySelector(".temperature-box");
-  #citySpan = document.querySelector(".city");
+
   #currentDate = new Date();
   #currentIndex;
   constructor() {
@@ -14,9 +15,9 @@ class App {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (location) => {
-          // console.log(location);
-          this.#getWeather(location);
+          console.log(location);
           this.#getAdress(location);
+          this.#getWeather(location);
         },
         () => alert("Вы не предоставили доступ к своей геопозиции ")
       );
@@ -24,6 +25,7 @@ class App {
   }
 
   // Получение данных о погоде из API open-meteo
+  // https://open-meteo.com/en/docs#hourly=temperature_2m,apparent_temperature&timezone=auto
   #getWeather(position) {
     const { latitude, longitude } = position.coords;
     fetch(
@@ -38,7 +40,7 @@ class App {
       });
   }
 
-  // определение индекста текущего времени
+  // определение индекса текущего времени
   #getCurrentTimeIndex(timeArray) {
     const formattedCurrentDate = this.#getFormattedDate();
     this.#currentIndex = timeArray.indexOf(formattedCurrentDate);
@@ -70,7 +72,7 @@ class App {
   // вывод температуры на страницу
   #showCurrentTemperature(currentTemperature) {
     this.#temperatureSpan.textContent = currentTemperature;
-    this.#temperatureBox.classList.remove("hidden");
+    // this.#temperatureBox.classList.remove("hidden");
   }
 
   // определение кажущейся текущей температуры
@@ -109,7 +111,7 @@ class App {
       .catch((error) => console.log("error", error));
   }
 
-  // вывод города на экран
+  // вывод города на экран https://dadata.ru/api/geolocate/
   #showCity(address) {
     const lastIndex = address.indexOf(",");
     const city = address.slice(0, lastIndex);
@@ -118,3 +120,7 @@ class App {
 }
 
 const app = new App();
+
+/** Version 1.4
+ * Добавление максимальной и минимальной температуры за сутки
+ */
