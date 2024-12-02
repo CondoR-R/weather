@@ -3,41 +3,46 @@ class App {
   #temperatureBox = document.querySelector(".temperature-box");
   #citySpan = document.querySelector(".city");
   #currentDate = new Date();
+  #currentIndex;
   constructor() {
     this.#getCoords();
   }
 
+  // получение координат пользователя через встроенный API
   #getCoords() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (location) => {
+          // console.log(location);
           this.#getWeather(location);
           this.#getAdress(location);
-          console.log(location);
         },
         () => alert("Вы не предоставили доступ к своей геопозиции ")
       );
     }
   }
 
+  // Получение данных о погоде из API open-meteo
   #getWeather(position) {
     const { latitude, longitude } = position.coords;
     fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,rain,snowfall&timezone=auto`
+      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,apparent_temperature&timezone=auto`
     )
       .then((res) => res.json())
-      .then((data) => this.#getCurrentWeather(data.hourly));
+      .then((data) => {
+        console.log(data.hourly);
+        this.#getCurrentTimeIndex(data.hourly.time);
+        this.#getCurrentTemperature(data.hourly.temperature_2m);
+      });
   }
 
-  #getCurrentWeather(weather) {
+  // определение индекста текущего времени
+  #getCurrentTimeIndex(timeArray) {
     const formattedCurrentDate = this.#getFormattedDate();
-    // получаем индекс текущего времени и по нему определяем температуру
-    const index = weather.time.indexOf(formattedCurrentDate);
-    const temperature = weather.temperature_2m[index];
-    this.#showWeather(temperature);
+    this.#currentIndex = timeArray.indexOf(formattedCurrentDate);
   }
 
-  // форматирование даты к нужному формату
+  // форматирование времени к нужному формату
   #getFormattedDate() {
     return `${this.#currentDate.getFullYear()}-${
       this.#currentDate.getMonth().toString().length === 1
@@ -54,13 +59,19 @@ class App {
     }:00`;
   }
 
-  // вывод данных на страницу
-  #showWeather(temp) {
+  // определение текущей температуры
+  #getCurrentTemperature(temperatureArray) {
+    const currentTemperature = temperatureArray[this.#currentIndex];
+    this.#showTemperature(currentTemperature);
+  }
+
+  // вывод температуры на страницу
+  #showTemperature(temp) {
     this.#temperatureSpan.textContent = temp;
     this.#temperatureBox.classList.remove("hidden");
   }
 
-  // получение от API город юзера
+  // получение обратного геокодирования от API
   #getAdress(position) {
     const { latitude, longitude } = position.coords;
     const url =
@@ -81,11 +92,12 @@ class App {
 
     fetch(url, options)
       .then((response) => response.json())
-      .then((result) => this.#showAdress(result.suggestions[0].value))
+      .then((result) => this.#showCity(result.suggestions[0].value))
       .catch((error) => console.log("error", error));
   }
 
-  #showAdress(address) {
+  // вывод города на экран
+  #showCity(address) {
     const lastIndex = address.indexOf(",");
     const city = address.slice(0, lastIndex);
     this.#citySpan.textContent = city;
