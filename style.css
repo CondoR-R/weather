@@ -38,11 +38,13 @@ body {
   font-size: 2.8rem;
   color: #333;
 }
-
 .temperature-box {
   margin-bottom: 2rem;
 }
-
+.temperature-paragraph {
+  font-size: 7.2rem;
+  text-align: center;
+}
 .hidden {
   visibility: hidden;
 }

@@ -13,6 +13,7 @@ class App {
         (location) => {
           this.#getWeather(location);
           this.#getAdress(location);
+          console.log(location);
         },
         () => alert("Вы не предоставили доступ к своей геопозиции ")
       );
