@@ -1,5 +1,6 @@
 class App {
   #temperatureSpan = document.querySelector("#temperature");
+  #apparentTemperatureSpan = document.querySelector("#apparent-temperature");
   #temperatureBox = document.querySelector(".temperature-box");
   #citySpan = document.querySelector(".city");
   #currentDate = new Date();
@@ -33,6 +34,7 @@ class App {
         console.log(data.hourly);
         this.#getCurrentTimeIndex(data.hourly.time);
         this.#getCurrentTemperature(data.hourly.temperature_2m);
+        this.#getApparentTemperature(data.hourly.apparent_temperature);
       });
   }
 
@@ -62,13 +64,24 @@ class App {
   // определение текущей температуры
   #getCurrentTemperature(temperatureArray) {
     const currentTemperature = temperatureArray[this.#currentIndex];
-    this.#showTemperature(currentTemperature);
+    this.#showCurrentTemperature(currentTemperature);
   }
 
   // вывод температуры на страницу
-  #showTemperature(temp) {
-    this.#temperatureSpan.textContent = temp;
+  #showCurrentTemperature(currentTemperature) {
+    this.#temperatureSpan.textContent = currentTemperature;
     this.#temperatureBox.classList.remove("hidden");
+  }
+
+  // определение кажущейся текущей температуры
+  #getApparentTemperature(apparentTemperatureArray) {
+    const apparentTemperature = apparentTemperatureArray[this.#currentIndex];
+    this.#showApparentTemperature(apparentTemperature);
+  }
+
+  // вывод текущей температуры на экран
+  #showApparentTemperature(apparentTemperature) {
+    this.#apparentTemperatureSpan.textContent = apparentTemperature;
   }
 
   // получение обратного геокодирования от API

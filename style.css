@@ -40,11 +40,16 @@ body {
 }
 .temperature-box {
   margin-bottom: 2rem;
+  text-align: center;
 }
 .temperature-paragraph {
   font-size: 7.2rem;
-  text-align: center;
 }
+.apparent-temperature-paragraph {
+  font-size: 2.8rem;
+  color: #333;
+}
+
 .hidden {
   visibility: hidden;
 }
