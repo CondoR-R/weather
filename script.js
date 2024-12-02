@@ -1,8 +1,8 @@
 class App {
+  #contentBox = document.querySelector(".content-box");
   #temperatureSpan = document.querySelector("#current-temperature");
   #apparentTemperatureSpan = document.querySelector("#apparent-temperature");
   #citySpan = document.querySelector("#city");
-  #temperatureBox = document.querySelector(".temperature-box");
 
   #currentDate = new Date();
   #currentIndex;
@@ -72,7 +72,8 @@ class App {
   // вывод температуры на страницу
   #showCurrentTemperature(currentTemperature) {
     this.#temperatureSpan.textContent = currentTemperature;
-    // this.#temperatureBox.classList.remove("hidden");
+    // создать метод сборщик со всеми выводами на страницу
+    this.#showApp();
   }
 
   // определение кажущейся текущей температуры
@@ -113,9 +114,15 @@ class App {
 
   // вывод города на экран https://dadata.ru/api/geolocate/
   #showCity(address) {
-    const lastIndex = address.indexOf(",");
-    const city = address.slice(0, lastIndex);
+    const firstIndex = address.indexOf(" "),
+      lastIndex = address.indexOf(",");
+    const city = address.slice(firstIndex, lastIndex);
     this.#citySpan.textContent = city;
+  }
+
+  // отображение интерфейса после загрузки данных
+  #showApp() {
+    this.#contentBox.classList.remove("hidden");
   }
 }
 
