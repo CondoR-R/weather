@@ -1,9 +1,6 @@
-class App {
-  #contentBox = document.querySelector(".content-box");
-  #temperatureSpan = document.querySelector("#current-temperature");
-  #apparentTemperatureSpan = document.querySelector("#apparent-temperature");
-  #citySpan = document.querySelector("#city");
+"use strict";
 
+class App {
   #currentDate = new Date();
   #currentIndex;
   constructor() {
@@ -37,6 +34,7 @@ class App {
         this.#getCurrentTimeIndex(data.hourly.time);
         this.#getCurrentTemperature(data.hourly.temperature_2m);
         this.#getApparentTemperature(data.hourly.apparent_temperature);
+        this.#getMinAndMaxTemperature(data.hourly.temperature_2m.slice(0, 23));
       });
   }
 
@@ -71,7 +69,8 @@ class App {
 
   // вывод температуры на страницу
   #showCurrentTemperature(currentTemperature) {
-    this.#temperatureSpan.textContent = currentTemperature;
+    document.querySelector("#current-temperature").textContent =
+      currentTemperature;
     // создать метод сборщик со всеми выводами на страницу
     this.#showApp();
   }
@@ -84,7 +83,26 @@ class App {
 
   // вывод текущей температуры на экран
   #showApparentTemperature(apparentTemperature) {
-    this.#apparentTemperatureSpan.textContent = apparentTemperature;
+    document.querySelector("#apparent-temperature").textContent =
+      apparentTemperature;
+  }
+
+  // определение минимальной и максимальной температуры за сутки
+  #getMinAndMaxTemperature(dayTemperature) {
+    const maxTemperature = dayTemperature.reduce(
+        (acc, val) => (acc > val ? acc : val),
+        dayTemperature[0]
+      ),
+      minTemperature = dayTemperature.reduce((acc, val) =>
+        acc < val ? acc : val
+      );
+    this.#showMinAndMaxTemperature(minTemperature, maxTemperature);
+  }
+
+  // вывод максимальной и минимальной температуры за сутки
+  #showMinAndMaxTemperature(min, max) {
+    document.querySelector("#max-temperature").textContent = max;
+    document.querySelector("#min-temperature").textContent = min;
   }
 
   // получение обратного геокодирования от API
@@ -92,7 +110,7 @@ class App {
     const { latitude, longitude } = position.coords;
     const url =
       "http://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address";
-    const token = "99c0507a40d0b615884486440a6470e0359a1929";
+    const token = tokenDaData;
     const query = { lat: latitude, lon: longitude };
 
     const options = {
@@ -117,12 +135,12 @@ class App {
     const firstIndex = address.indexOf(" "),
       lastIndex = address.indexOf(",");
     const city = address.slice(firstIndex, lastIndex);
-    this.#citySpan.textContent = city;
+    document.querySelector("#city").textContent = city;
   }
 
   // отображение интерфейса после загрузки данных
   #showApp() {
-    this.#contentBox.classList.remove("hidden");
+    document.querySelector(".content-box").classList.remove("hidden");
   }
 }
 
