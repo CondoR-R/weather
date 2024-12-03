@@ -17,7 +17,30 @@ class App {
     promise.then(this.#getWeather(location)).then(() => {
       setTimeout(() => {
         document.querySelector(".loading").classList.add("hidden");
-        document.querySelector(".content-box").classList.remove("hidden");
+
+        const contentBox = document.querySelector(".content-box");
+        contentBox.classList.remove("hidden");
+        contentBox.classList.add("content-box-animation");
+
+        setTimeout(() => {
+          const upElements = document.querySelectorAll(".offset-up");
+          upElements.forEach((element) => {
+            element.classList.add("up-to-down");
+            element.classList.remove("offset-up");
+          });
+
+          const leftElements = document.querySelectorAll(".offset-left");
+          leftElements.forEach((element) => {
+            element.classList.add("left-to-right");
+            element.classList.remove("offset-left");
+          });
+
+          const rightElements = document.querySelectorAll(".offset-right");
+          rightElements.forEach((element) => {
+            element.classList.add("right-to-left");
+            element.classList.remove("offset-right");
+          });
+        }, 500);
       }, 500);
     });
   }
@@ -174,7 +197,3 @@ class App {
 }
 
 const app = new App();
-
-/** Идеи что добавить:
- * кружок загрузки пока грузятся данные
- */

@@ -9,29 +9,35 @@
     <script defer src="script.js"></script>
   </head>
   <body>
+    <!-- кружок загрузки -->
     <div class="loading"></div>
     <div class="container">
       <div class="content-box hidden">
-        <section class="location section">
+        <!-- город -->
+        <section class="location section offset-up">
           <img src="icons/geolocation.svg" alt="" class="icon location__icon" />
           <span class="span" id="city"></span>
         </section>
+        <!-- горизонтальная линия -->
         <div class="horizontal-line"></div>
+        <!-- текущая Погода -->
         <section class="current-weather section">
-          <p class="paragraph current-weather__paragraph">Сейчас:</p>
-          <div class="current-precipitation-box">
+          <p class="paragraph current-weather__paragraph offset-left">
+            Сейчас:
+          </p>
+          <div class="current-precipitation-box offset-right">
             <span class="span" id="current-precipitation">Без осадков</span>
           </div>
-          <div class="current-temperature-box">
+          <div class="current-temperature-box offset-left">
             <span id="current-temperature" class="span"></span>
             <span class="span">ºC</span>
           </div>
-          <div class="apparent-temperature-box">
+          <div class="apparent-temperature-box offset-right">
             <span class="span apparent-temperature__text">Ощущается как</span>
             <span id="apparent-temperature" class="span"></span>
             <span class="span">ºC</span>
           </div>
-          <div class="max-min-temperature">
+          <div class="max-min-temperature offset-left">
             <div class="max-temperature-box">
               <span class="span">Максимум</span>
               <span class="span" id="max-temperature"></span>
@@ -46,6 +52,7 @@
           </div>
         </section>
         <div class="horizontal-line"></div>
+        <!-- прогноз по часам -->
       </div>
     </div>
   </body>
