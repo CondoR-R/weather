@@ -100,3 +100,36 @@ body {
 .hidden {
   visibility: hidden;
 }
+
+.loading {
+  border: 1.6rem solid #f3f3f3; /* Light grey */
+  border-top: 1.6rem solid #555; /* Blue */
+  border-radius: 50%;
+  width: 12rem;
+  height: 12rem;
+  top: 20rem;
+  left: 50%;
+  position: absolute;
+  transform-origin: center center;
+  transform: translateX(-50%);
+  opacity: 0.5;
+  animation: loading 1.5s infinite linear;
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-50%) rotate(0);
+  }
+  25% {
+    transform: translateX(-50%) rotate(90deg);
+  }
+  50% {
+    transform: translateX(-50%) rotate(180deg);
+  }
+  75% {
+    transform: translateX(-50%) rotate(270deg);
+  }
+  100% {
+    transform: translateX(-50%) rotate(360deg);
+  }
+}

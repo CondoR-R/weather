@@ -2,19 +2,31 @@ class App {
   #currentDate = new Date();
   #currentIndex;
   constructor() {
+    this.#startApp();
+  }
+
+  #startApp() {
     this.#getCoords();
+  }
+
+  // отображение интерфейса после загрузки данных
+  #showApp(location) {
+    console.log(location);
+    this.#getAdress(location);
+    let promise = new Promise((resolve, reject) => resolve(1));
+    promise.then(this.#getWeather(location)).then(() => {
+      setTimeout(() => {
+        document.querySelector(".loading").classList.add("hidden");
+        document.querySelector(".content-box").classList.remove("hidden");
+      }, 500);
+    });
   }
 
   // получение координат пользователя через встроенный API
   #getCoords() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (location) => {
-          console.log(location);
-          this.#getAdress(location);
-          this.#getWeather(location);
-        },
-        () => alert("Вы не предоставили доступ к своей геопозиции ")
+      navigator.geolocation.getCurrentPosition(this.#showApp.bind(this), () =>
+        alert("Вы не предоставили доступ к своей геопозиции ")
       );
     }
   }
@@ -33,10 +45,14 @@ class App {
         this.#getCurrentTemperature(data.hourly.temperature_2m);
         this.#getApparentTemperature(data.hourly.apparent_temperature);
         this.#getMinAndMaxTemperature(
-          data.hourly.temperature_2m.slice(this.#currentIndex, 23)
+          data.hourly.temperature_2m.slice(
+            this.#currentIndex,
+            this.#currentIndex + 23
+          )
         );
         this.#getCurrentPrecipitation(data.hourly);
       });
+    return;
   }
 
   // определение индекса текущего времени
@@ -72,8 +88,6 @@ class App {
   #showCurrentTemperature(currentTemperature) {
     document.querySelector("#current-temperature").textContent =
       currentTemperature;
-    // создать метод сборщик со всеми выводами на страницу
-    this.#showApp();
   }
 
   // определение кажущейся текущей температуры
@@ -109,7 +123,8 @@ class App {
   // получение информации об осадках сейчас
   #getCurrentPrecipitation(weather) {
     let currentPrecipitation;
-    if (weather.rain[this.#currentIndex] !== 0) currentPrecipitation = "Дождь 🌧️";
+    if (weather.rain[this.#currentIndex] !== 0)
+      currentPrecipitation = "Дождь 🌧️";
     else if (weather.showers[this.#currentIndex])
       currentPrecipitation = "Ливень ⛈️";
     else if (weather.snowfall[this.#currentIndex])
@@ -156,17 +171,10 @@ class App {
     const city = address.slice(firstIndex, lastIndex);
     document.querySelector("#city").textContent = city;
   }
-
-  // отображение интерфейса после загрузки данных
-  #showApp() {
-    document.querySelector(".content-box").classList.remove("hidden");
-  }
 }
 
 const app = new App();
 
 /** Идеи что добавить:
- * метод запуска приложения
- * метод отображения интерфейса после загрузки данных
  * кружок загрузки пока грузятся данные
  */
