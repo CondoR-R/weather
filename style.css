@@ -18,7 +18,7 @@ body {
 .content-box {
   width: 60rem;
   border-radius: 1.5rem;
-  background-color: #ccc;
+  background-color: #bbb;
   opacity: 0.7;
   margin: 0 auto;
   padding: 3rem;
@@ -57,6 +57,12 @@ body {
   color: #333;
   grid-column: 1 / 2;
   grid-row: 1 / 2;
+}
+.current-precipitation-box {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  font-size: 2.8rem;
+  align-content: center;
 }
 .current-temperature-box {
   grid-column: 1 / 2;

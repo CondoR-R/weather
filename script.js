@@ -24,17 +24,18 @@ class App {
   #getWeather(position) {
     const { latitude, longitude } = position.coords;
     fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,apparent_temperature&timezone=auto`
+      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,apparent_temperature,rain,showers,snowfall&timezone=auto`
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data.hourly);
+        console.log(data);
         this.#getCurrentTimeIndex(data.hourly.time);
         this.#getCurrentTemperature(data.hourly.temperature_2m);
         this.#getApparentTemperature(data.hourly.apparent_temperature);
         this.#getMinAndMaxTemperature(
           data.hourly.temperature_2m.slice(this.#currentIndex, 23)
         );
+        this.#getCurrentPrecipitation(data.hourly);
       });
   }
 
@@ -103,6 +104,24 @@ class App {
   #showMinAndMaxTemperature(min, max) {
     document.querySelector("#max-temperature").textContent = max;
     document.querySelector("#min-temperature").textContent = min;
+  }
+
+  // получение информации об осадках сейчас
+  #getCurrentPrecipitation(weather) {
+    let currentPrecipitation;
+    if (weather.rain[this.#currentIndex] !== 0) currentPrecipitation = "Дождь 🌧️";
+    else if (weather.showers[this.#currentIndex])
+      currentPrecipitation = "Ливень ⛈️";
+    else if (weather.snowfall[this.#currentIndex])
+      currentPrecipitation = "Снег 🌨️";
+    else currentPrecipitation = "Без осадков 🌤️";
+    this.#showCurrentPrecipitation(currentPrecipitation);
+  }
+
+  // вывод текущих осадков на экран
+  #showCurrentPrecipitation(currentPrecipitation) {
+    document.querySelector("#current-precipitation").textContent =
+      currentPrecipitation;
   }
 
   // получение обратного геокодирования от API
