@@ -1,5 +1,3 @@
-"use strict";
-
 class App {
   #currentDate = new Date();
   #currentIndex;
@@ -34,7 +32,9 @@ class App {
         this.#getCurrentTimeIndex(data.hourly.time);
         this.#getCurrentTemperature(data.hourly.temperature_2m);
         this.#getApparentTemperature(data.hourly.apparent_temperature);
-        this.#getMinAndMaxTemperature(data.hourly.temperature_2m.slice(0, 23));
+        this.#getMinAndMaxTemperature(
+          data.hourly.temperature_2m.slice(this.#currentIndex, 23)
+        );
       });
   }
 
@@ -146,6 +146,8 @@ class App {
 
 const app = new App();
 
-/** Version 1.4
- * Добавление максимальной и минимальной температуры за сутки
+/** Идеи что добавить:
+ * метод запуска приложения
+ * метод отображения интерфейса после загрузки данных
+ * кружок загрузки пока грузятся данные
  */
