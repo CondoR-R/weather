@@ -12,7 +12,7 @@ class App {
 
   // отображение интерфейса после загрузки данных
   #showApp(location) {
-    this.#getAdress(location);
+    // this.#getAdress(location);
 
     let promise = new Promise((resolve, reject) => resolve(1));
     promise.then(this.#getWeather(location)).then(() => {
@@ -73,6 +73,8 @@ class App {
     )
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
+        this.#showCityEng(data.timezone);
         this.#getCurrentTimeIndex(data.hourly.time);
         this.#getCurrentTemperature(data.hourly.temperature_2m);
         this.#getApparentTemperature(data.hourly.apparent_temperature);
@@ -319,6 +321,12 @@ class App {
     const firstIndex = address.indexOf("г"),
       lastIndex = address.indexOf(",");
     const city = address.slice(firstIndex + 2, lastIndex);
+
+    document.querySelector("#city").textContent = city;
+  }
+  #showCityEng(address) {
+    const firstIndex = address.indexOf("/");
+    const city = address.slice(firstIndex + 1);
 
     document.querySelector("#city").textContent = city;
   }
