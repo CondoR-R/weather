@@ -160,10 +160,8 @@ body {
 .hourly-forecast {
   display: grid;
   grid-template-columns: repeat(24, 12rem);
-  grid-template-rows: 12rem;
   column-gap: 1rem;
   overflow: scroll;
-  height: 13rem;
 }
 .hourly-forecast_title {
   margin-bottom: 1rem;
