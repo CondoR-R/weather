@@ -315,9 +315,10 @@ class App {
 
   // вывод города на экран https://dadata.ru/api/geolocate/
   #showCity(address) {
-    const firstIndex = address.indexOf(" "),
+    console.log(address);
+    const firstIndex = address.indexOf("г"),
       lastIndex = address.indexOf(",");
-    const city = address.slice(firstIndex, lastIndex);
+    const city = address.slice(firstIndex + 2, lastIndex);
 
     document.querySelector("#city").textContent = city;
   }
