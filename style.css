@@ -6,6 +6,17 @@
 html {
   font-size: 62.5%;
 }
+@media (max-width: 620px) {
+  html {
+    font-size: 50%;
+  }
+}
+@media (max-width: 500px) {
+  html {
+    font-size: 30%;
+  }
+}
+
 body {
   font-family: sans-serif;
   color: #111;
@@ -23,6 +34,12 @@ body {
   padding: 1rem;
 }
 
+@media (max-width: 500px) {
+  .container {
+    padding: 0rem;
+  }
+}
+
 /* контент часть, белый прямоугольник */
 .content-box {
   width: 60rem;
@@ -32,6 +49,13 @@ body {
   margin: 0 auto;
   padding: 3rem;
   overflow: hidden;
+}
+@media (max-width: 500px) {
+  .content-box {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+  }
 }
 /* анимация появления */
 .content-box-animation {
