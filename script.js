@@ -1,6 +1,7 @@
 class App {
   #currentDate = new Date();
   #currentIndex;
+
   constructor() {
     this.#startApp();
   }
@@ -12,7 +13,9 @@ class App {
   // отображение интерфейса после загрузки данных
   #showApp(location) {
     console.log(location);
+
     this.#getAdress(location);
+
     let promise = new Promise((resolve, reject) => resolve(1));
     promise.then(this.#getWeather(location)).then(() => {
       setTimeout(() => {
@@ -51,19 +54,21 @@ class App {
       navigator.geolocation.getCurrentPosition(this.#showApp.bind(this), () =>
         alert("Вы не предоставили доступ к своей геопозиции ")
       );
-    }
+    } else alert("Упс, но походу ваш браузер не поддерживает геопозицию...");
   }
 
   // Получение данных о погоде из API open-meteo
   // https://open-meteo.com/en/docs#hourly=temperature_2m,apparent_temperature&timezone=auto
   #getWeather(position) {
     const { latitude, longitude } = position.coords;
+
     fetch(
       `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,apparent_temperature,rain,showers,snowfall&timezone=auto`
     )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+
         this.#getCurrentTimeIndex(data.hourly.time);
         this.#getCurrentTemperature(data.hourly.temperature_2m);
         this.#getApparentTemperature(data.hourly.apparent_temperature);
@@ -73,8 +78,10 @@ class App {
             this.#currentIndex + 23
           )
         );
-        this.#getCurrentPrecipitation(data.hourly);
+        this.#showCurrentPrecipitation(data.hourly);
+        this.#getHourlyForecast(data.hourly);
       });
+
     return;
   }
 
@@ -134,6 +141,9 @@ class App {
       minTemperature = dayTemperature.reduce((acc, val) =>
         acc < val ? acc : val
       );
+    console.log(dayTemperature);
+    console.log(minTemperature, maxTemperature);
+
     this.#showMinAndMaxTemperature(minTemperature, maxTemperature);
   }
 
@@ -153,13 +163,42 @@ class App {
     else if (weather.snowfall[this.#currentIndex])
       currentPrecipitation = "Снег 🌨️";
     else currentPrecipitation = "Без осадков 🌤️";
-    this.#showCurrentPrecipitation(currentPrecipitation);
+    return currentPrecipitation;
   }
 
   // вывод текущих осадков на экран
-  #showCurrentPrecipitation(currentPrecipitation) {
+  #showCurrentPrecipitation(weather) {
+    const currentPrecipitation = this.#getCurrentPrecipitation(weather);
     document.querySelector("#current-precipitation").textContent =
       currentPrecipitation;
+  }
+
+  // получение почасового прогноза
+  #getHourlyForecast(weather) {
+    for (let i = this.#currentIndex; i < this.#currentIndex + 24; i++) {
+      const temperature = weather.temperature_2m[i],
+        precipitation = this.#getCurrentPrecipitation(weather),
+        time = weather.time[i].slice(-5);
+      this.#showHourlyForecast(temperature, precipitation, time);
+    }
+  }
+
+  #showHourlyForecast(temperature, precipitation, time) {
+    const html = `<div class="hourly-forecast__cell">
+                    <p class="hourly-forecast__p hourly-forecast__temperature">
+                      <span class="span hourly-temperature">${temperature}</span>
+                      <span class="span">ºC</span>
+                    </p>
+                    <p class="hourly-forecast__p hourly-forecast__precipitation">
+                      <span class="span hourly-precipitation">${precipitation}</span>
+                    </p>
+                    <p class="hourly-forecast__p hourly-forecast__time">
+                      <span class="span hourly-time">${time}</span>
+                    </p>
+                  </div>`;
+    document
+      .querySelector(".hourly-forecast")
+      .insertAdjacentHTML("beforeend", html);
   }
 
   // получение обратного геокодирования от API
@@ -192,6 +231,7 @@ class App {
     const firstIndex = address.indexOf(" "),
       lastIndex = address.indexOf(",");
     const city = address.slice(firstIndex, lastIndex);
+
     document.querySelector("#city").textContent = city;
   }
 }
