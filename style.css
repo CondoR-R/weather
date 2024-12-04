@@ -192,6 +192,14 @@ body {
   animation: right-to-left 0.5s linear;
 }
 
+/* плавное появление */
+.offset-appearance {
+  opacity: 0;
+}
+.appearance {
+  animation: appearance 0.5s linear;
+}
+
 /* анимации */
 
 /* загрузка */
@@ -253,5 +261,21 @@ body {
   }
   100% {
     transform: translateX(0);
+  }
+}
+
+/* плавное появление */
+@keyframes appearance {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
   }
 }

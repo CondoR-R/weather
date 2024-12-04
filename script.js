@@ -43,6 +43,13 @@ class App {
             element.classList.add("right-to-left");
             element.classList.remove("offset-right");
           });
+
+          const appearanceElements =
+            document.querySelectorAll(".offset-appearance");
+          appearanceElements.forEach((element) => {
+            element.classList.add("appearance");
+            element.classList.remove("offset-appearance");
+          });
         }, 500);
       }, 500);
     });
