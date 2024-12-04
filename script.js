@@ -292,7 +292,7 @@ class App {
   #getAdress(position) {
     const { latitude, longitude } = position.coords;
     const url =
-      "http://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address";
+      "https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address";
     const token = "99c0507a40d0b615884486440a6470e0359a1929";
     const query = { lat: latitude, lon: longitude };
 
