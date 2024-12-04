@@ -12,7 +12,7 @@ class App {
 
   // отображение интерфейса после загрузки данных
   #showApp(location) {
-    console.log(location);
+    // console.log(location);
 
     this.#getAdress(location);
 
@@ -74,12 +74,12 @@ class App {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         this.#getCurrentTimeIndex(data.hourly.time);
         this.#getCurrentTemperature(data.hourly.temperature_2m);
         this.#getApparentTemperature(data.hourly.apparent_temperature);
-        this.#getMinAndMaxTemperature(
+        this.#showMinAndMaxTemperature(
           data.hourly.temperature_2m.slice(
             this.#currentIndex,
             this.#currentIndex + 23
@@ -87,6 +87,7 @@ class App {
         );
         this.#showCurrentPrecipitation(data.hourly);
         this.#getHourlyForecast(data.hourly);
+        this.#getWeeklyForecast(data.hourly);
       });
 
     return;
@@ -148,29 +149,25 @@ class App {
       minTemperature = dayTemperature.reduce((acc, val) =>
         acc < val ? acc : val
       );
-    console.log(dayTemperature);
-    console.log(minTemperature, maxTemperature);
+    // console.log(dayTemperature);
+    // console.log(minTemperature, maxTemperature);
 
-    this.#showMinAndMaxTemperature(minTemperature, maxTemperature);
+    return [minTemperature, maxTemperature];
   }
 
   // вывод максимальной и минимальной температуры за сутки
-  #showMinAndMaxTemperature(min, max) {
+  #showMinAndMaxTemperature(dayTemperature) {
+    const [min, max] = this.#getMinAndMaxTemperature(dayTemperature);
     document.querySelector("#max-temperature").textContent = max;
     document.querySelector("#min-temperature").textContent = min;
   }
 
   // получение информации об осадках сейчас
   #getCurrentPrecipitation(weather) {
-    let currentPrecipitation;
-    if (weather.rain[this.#currentIndex] !== 0)
-      currentPrecipitation = "Дождь 🌧️";
-    else if (weather.showers[this.#currentIndex])
-      currentPrecipitation = "Ливень ⛈️";
-    else if (weather.snowfall[this.#currentIndex])
-      currentPrecipitation = "Снег 🌨️";
-    else currentPrecipitation = "Без осадков 🌤️";
-    return currentPrecipitation;
+    if (weather.snowfall[this.#currentIndex]) return "Снег 🌨️";
+    else if (weather.showers[this.#currentIndex]) return "Ливень ⛈️";
+    else if (weather.rain[this.#currentIndex]) return "Дождь 🌧️";
+    else return "Без осадков 🌤️";
   }
 
   // вывод текущих осадков на экран
@@ -206,6 +203,92 @@ class App {
     document
       .querySelector(".hourly-forecast")
       .insertAdjacentHTML("beforeend", html);
+  }
+
+  // прогноз на неделю
+  #getWeeklyForecast(weather) {
+    for (let i = 1; i < 7; i++) {
+      const day = this.#getDay(weather.time[i * 24]),
+        precipitation = this.#getPrecipitation(i, weather),
+        [minTemperature, maxTemperature] = this.#getMinAndMaxTemperature(
+          weather.temperature_2m.slice(i * 24, i * 24 + 23)
+        );
+
+      this.#showWeeklyForecats(
+        day,
+        precipitation,
+        minTemperature,
+        maxTemperature
+      );
+    }
+  }
+
+  #showWeeklyForecats(day, precipitation, minTemperature, maxTemperature) {
+    const html = `<div class="weekly-forecast__cell">
+                    <p class="weekly-forecast__day">${day}</p>
+                    <p class="weekly-forecast__precipitation">${precipitation}</p>
+                    <p class="weekly-forecast__temperature">
+                      <span class="span weekly-forecast__max-temperature">${Math.round(
+                        maxTemperature
+                      )}ºC</span>
+                      /
+                      <span class="span weekly-forecast__min-temperature">${Math.round(
+                        minTemperature
+                      )}ºC</span>
+                    </p>
+                  </div>`;
+    document
+      .querySelector(".weekly-forecast__box")
+      .insertAdjacentHTML("beforeend", html);
+  }
+
+  #getDay(date) {
+    const day = new Date(date);
+    const weekDay = this.#getWeekDay(day.getDay()),
+      dayNum = day.getDate(),
+      month = this.#getMonthWord(day.getMonth());
+
+    return `${weekDay}, ${dayNum} ${month}`;
+  }
+
+  #getMonthWord(index) {
+    const month = [
+      "янв.",
+      "фев.",
+      "марта",
+      "апр.",
+      "мая",
+      "июня",
+      "июля",
+      "авг.",
+      "сен.",
+      "окт.",
+      "нояб.",
+      "дек.",
+    ];
+    return month[index];
+  }
+
+  #getWeekDay(index) {
+    const weekDays = [
+      "Воскресенье",
+      "Понедельник",
+      "Вторник",
+      "Среда",
+      "Четверг",
+      "Пятница",
+      "Суббота",
+    ];
+    return weekDays[index];
+  }
+
+  #getPrecipitation(index, weather) {
+    for (let i = index * 24; i < (index + 1) * 24; i++) {
+      if (weather.snowfall[i]) return "Снег 🌨️";
+      else if (weather.showers[i]) return "Ливень ⛈️";
+      else if (weather.rain[i]) return "Дождь 🌧️";
+    }
+    return "Без осадков 🌤️";
   }
 
   // получение обратного геокодирования от API

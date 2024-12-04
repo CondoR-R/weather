@@ -147,6 +147,25 @@ body {
   border-radius: 1rem;
 }
 
+/* недельный прогноз */
+.weekly-forecast__title {
+  margin-bottom: 1rem;
+}
+.weekly-forecast__cell {
+  font-size: 1.8rem;
+  display: grid;
+  grid-template-columns: 45% 25% 30%;
+  margin-bottom: 1rem;
+}
+.weekly-forecast__temperature {
+  display: flex;
+  justify-content: end;
+  color: #333;
+}
+.weekly-forecast__max-temperature {
+  color: #111;
+}
+
 /* класс скрытия */
 .hidden {
   visibility: hidden;
