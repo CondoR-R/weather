@@ -12,8 +12,6 @@ class App {
 
   // отображение интерфейса после загрузки данных
   #showApp(location) {
-    // console.log(location);
-
     this.#getAdress(location);
 
     let promise = new Promise((resolve, reject) => resolve(1));
@@ -25,33 +23,34 @@ class App {
         contentBox.classList.remove("hidden");
         contentBox.classList.add("content-box-animation");
 
-        setTimeout(() => {
-          const upElements = document.querySelectorAll(".offset-up");
-          upElements.forEach((element) => {
-            element.classList.add("up-to-down");
-            element.classList.remove("offset-up");
-          });
-
-          const leftElements = document.querySelectorAll(".offset-left");
-          leftElements.forEach((element) => {
-            element.classList.add("left-to-right");
-            element.classList.remove("offset-left");
-          });
-
-          const rightElements = document.querySelectorAll(".offset-right");
-          rightElements.forEach((element) => {
-            element.classList.add("right-to-left");
-            element.classList.remove("offset-right");
-          });
-
-          const appearanceElements =
-            document.querySelectorAll(".offset-appearance");
-          appearanceElements.forEach((element) => {
-            element.classList.add("appearance");
-            element.classList.remove("offset-appearance");
-          });
-        }, 500);
+        setTimeout(this.#animations, 500);
       }, 500);
+    });
+  }
+
+  #animations() {
+    const upElements = document.querySelectorAll(".offset-up");
+    upElements.forEach((element) => {
+      element.classList.add("up-to-down");
+      element.classList.remove("offset-up");
+    });
+
+    const leftElements = document.querySelectorAll(".offset-left");
+    leftElements.forEach((element) => {
+      element.classList.add("left-to-right");
+      element.classList.remove("offset-left");
+    });
+
+    const rightElements = document.querySelectorAll(".offset-right");
+    rightElements.forEach((element) => {
+      element.classList.add("right-to-left");
+      element.classList.remove("offset-right");
+    });
+
+    const appearanceElements = document.querySelectorAll(".offset-appearance");
+    appearanceElements.forEach((element) => {
+      element.classList.add("appearance");
+      element.classList.remove("offset-appearance");
     });
   }
 
@@ -74,8 +73,6 @@ class App {
     )
       .then((res) => res.json())
       .then((data) => {
-        // console.log(data);
-
         this.#getCurrentTimeIndex(data.hourly.time);
         this.#getCurrentTemperature(data.hourly.temperature_2m);
         this.#getApparentTemperature(data.hourly.apparent_temperature);
@@ -149,8 +146,6 @@ class App {
       minTemperature = dayTemperature.reduce((acc, val) =>
         acc < val ? acc : val
       );
-    // console.log(dayTemperature);
-    // console.log(minTemperature, maxTemperature);
 
     return [minTemperature, maxTemperature];
   }
@@ -266,6 +261,7 @@ class App {
       "нояб.",
       "дек.",
     ];
+
     return month[index];
   }
 
@@ -279,6 +275,7 @@ class App {
       "Пятница",
       "Суббота",
     ];
+
     return weekDays[index];
   }
 
